@@ -1,0 +1,22 @@
+# Overlay de homologação. Uso: docker compose -f docker-compose.yaml -f docker-compose.staging.yaml up --build
+#
+# Não compartilha banco, Redis, MinIO nem segredos com produção ou desenvolvimento.
+# Espera um .env.staging próprio (nunca o mesmo .env de desenvolvimento/produção).
+
+services:
+  postgres:
+    volumes:
+      - postgres_data_staging:/var/lib/postgresql/data
+
+  redis:
+    volumes:
+      - redis_data_staging:/data
+
+  api:
+    environment:
+      NODE_ENV: production
+    restart: "no"
+
+volumes:
+  postgres_data_staging:
+  redis_data_staging:

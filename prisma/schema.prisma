@@ -1,0 +1,48 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String    @id @default(uuid())
+  name                   String
+  email                  String    @unique
+  password               String
+  role                   String    @default("user")
+  mustChangePassword     Boolean   @default(false)
+  passwordResetVersion   Int       @default(0)
+  passwordResetToken     String?   @unique
+  passwordResetExpiresAt DateTime?
+  mfaEnabled             Boolean   @default(false)
+  mfaSecretCipher        String?
+  mfaConfirmedAt         DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  deletedAt              DateTime?
+
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id               String    @id @default(uuid())
+  accountId        String
+  refreshTokenHash String    @unique
+  userAgent        String?
+  ip               String?
+  createdAt        DateTime  @default(now())
+  lastUsedAt       DateTime  @default(now())
+  expiresAt        DateTime
+  revokedAt        DateTime?
+
+  account User @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@map("sessions")
+}

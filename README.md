@@ -28,60 +28,71 @@ Documentação completa em [`docs/`](./docs):
 | [`docs/modules.md`](./docs/modules.md) | Escopo do MVP e módulos futuros (crescimento sob demanda) |
 | [`docs/roadmap.md`](./docs/roadmap.md) | Fases de desenvolvimento e adoção |
 
+Planejamento de execução (sprints e tarefas, cada uma cobrindo backend + frontend) em [`sprints/`](./sprints).
+
 ## Stack
 
 - **Linguagem**: TypeScript
 - **Framework HTTP**: [Fastify](https://fastify.dev)
-- **Banco de dados**: PostgreSQL
-- **Cache / sessões**: Redis
-- **Filas assíncronas**: [BullMQ](https://docs.bullmq.io)
+- **Banco de dados**: PostgreSQL, via [Prisma ORM](https://www.prisma.io)
+- **Cache / sessões / filas**: Redis + [BullMQ](https://docs.bullmq.io)
+- **Autenticação**: JWT (access + refresh tokens), MFA via TOTP opcional
 - **Design de código**: Domain-Driven Design (DDD) sobre um Monolito Modular
+- **Injeção de dependência**: [tsyringe](https://github.com/microsoft/tsyringe)
+- **Integrações opcionais** (não bloqueiam o boot se não configuradas): [Resend](https://resend.com) (e-mail transacional), [Sentry](https://sentry.io) (observabilidade de erros)
+- **Armazenamento de arquivos**: [MinIO](https://min.io) (ex. logo do estabelecimento, fotos do cardápio)
 
 ## Getting Started
-
-> O código-fonte ainda está sendo estruturado. Esta seção documenta o setup planejado para guiar a implementação inicial.
 
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org) 20 LTS ou superior
-- [pnpm](https://pnpm.io) (gerenciador de pacotes)
-- [Docker](https://www.docker.com) + Docker Compose (para subir Postgres e Redis localmente)
+- npm (gerenciador de pacotes)
+- [Docker](https://www.docker.com) + Docker Compose (para subir Postgres, Redis e MinIO localmente)
 
 ### Subindo a infraestrutura local
 
 ```bash
-docker compose up -d
+docker compose up -d postgres redis minio
 ```
 
-Isso deve subir os containers de PostgreSQL e Redis usados em desenvolvimento (ver `docker-compose.yml` na raiz do projeto).
+Sobe os containers de PostgreSQL, Redis e MinIO usados em desenvolvimento (ver `docker-compose.yaml` na raiz do projeto — os serviços `migrate` e `api` do compose são voltados para build de produção/staging).
 
 ### Instalação
 
 ```bash
-pnpm install
+npm install
 cp .env.example .env
+npm run db:migrate:dev
 ```
 
-### Variáveis de ambiente esperadas
+### Variáveis de ambiente
 
-| Variável | Descrição | Exemplo |
-|---|---|---|
-| `PORT` | Porta em que a API Fastify escuta | `3000` |
-| `DATABASE_URL` | Connection string do PostgreSQL | `postgresql://user:pass@localhost:5432/simplify_erp` |
-| `REDIS_URL` | Connection string do Redis (cache e filas do BullMQ) | `redis://localhost:6379` |
-| `JWT_SECRET` | Segredo usado para assinar tokens de autenticação do Core | — |
-| `NODE_ENV` | Ambiente de execução | `development` \| `production` |
+Ver [`.env.example`](./.env.example) para a lista completa com valores de exemplo. As obrigatórias para o servidor subir são:
 
-### Scripts npm planejados
+| Variável | Descrição |
+|---|---|
+| `DATABASE_URL` | Connection string do PostgreSQL |
+| `JWT_SECRET` | Segredo (mín. 32 caracteres) usado para assinar os tokens de autenticação |
+| `FRONTEND_URL` | URL do frontend, usada em CORS e em links de e-mail (ex. reset de senha) |
+| `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` | Credenciais da conta de superadministrador criada automaticamente no boot |
+| `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` | Credenciais do MinIO |
+
+`MFA_ENCRYPTION_KEY`, `SENTRY_DSN` e `RESEND_API_KEY` são opcionais: sem eles o servidor sobe normalmente e o respectivo recurso (MFA, observabilidade, envio de e-mail) fica indisponível em vez de derrubar o boot.
+
+### Scripts npm
 
 | Script | Descrição |
 |---|---|
-| `pnpm dev` | Sobe a API em modo desenvolvimento com hot-reload |
-| `pnpm build` | Compila o TypeScript para produção |
-| `pnpm start` | Roda a API a partir do build de produção |
-| `pnpm test` | Executa a suíte de testes |
-| `pnpm migrate` | Aplica as migrations do banco de dados |
-| `pnpm lint` | Executa o linter |
+| `npm run dev` | Sobe a API em modo desenvolvimento com hot-reload |
+| `npm run build` | Compila o TypeScript para produção (`dist/`) |
+| `npm start` | Roda a API a partir do build de produção |
+| `npm test` | Executa a suíte de testes (Vitest) |
+| `npm run test:watch` | Executa os testes em modo watch |
+| `npm run db:migrate:dev` | Aplica migrations do Prisma em desenvolvimento |
+| `npm run db:migrate:deploy` | Aplica migrations do Prisma em produção/staging |
+| `npm run lint` | Executa o linter |
+| `npm run format` | Formata o código com Prettier |
 
 ## Repositório relacionado
 

@@ -1,0 +1,65 @@
+{
+  "name": "simplifyerp-backend",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch ./src/infra/http/main.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "build": "rm -rf dist && tsc",
+    "format": "prettier --write ./src ./prisma",
+    "lint": "eslint ./src",
+    "prepare": "husky",
+    "start": "node ./dist/infra/http/main.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.0",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^11.2.0",
+    "@prisma/client": "^6.19.2",
+    "@sentry/node": "^10.69.0",
+    "bcryptjs": "^3.0.3",
+    "bullmq": "^5.81.3",
+    "dotenv": "^16.6.1",
+    "fastify": "^5.10.0",
+    "jsonwebtoken": "^9.0.3",
+    "minio": "^8.0.7",
+    "module-alias": "^2.3.4",
+    "otplib": "^12.0.1",
+    "pino": "^9.14.0",
+    "reflect-metadata": "^0.2.2",
+    "resend": "^6.18.1",
+    "tsyringe": "^4.10.0",
+    "yup": "^1.7.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@faker-js/faker": "^8.4.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.33",
+    "eslint": "^10.8.0",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "pino-pretty": "^11.3.0",
+    "prettier": "^3.8.1",
+    "prisma": "^6.19.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "deepmerge-ts": "^8.0.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}
