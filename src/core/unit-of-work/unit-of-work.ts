@@ -1,5 +1,3 @@
 export interface IUnitOfWork {
-  begin(): Promise<void>;
-  commit(): Promise<void>;
-  rollback(): Promise<void>;
+  runInTransaction<T>(work: (tx: unknown) => Promise<T>): Promise<T>;
 }

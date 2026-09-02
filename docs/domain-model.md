@@ -29,6 +29,25 @@ O backend usa **Domain-Driven Design** como design de código. Cada módulo de n
 - **Value Objects**: `Email`, `Role`
 - **Domain Events**: `TenantCreated`, `ModuleEnabled`, `UserAuthenticated`
 
+#### Hierarquia de administradores (staff)
+
+Além dos roles de tenant (`OWNER`, `OPERATOR`), o Core tem uma hierarquia de contas internas da
+SimplifyERP (não pertencem a nenhum tenant), com uma regra simples: **um cargo só pode criar e
+desativar cargos abaixo dele**, e todo cargo herda as permissões dos cargos que pode gerenciar.
+
+```
+SUPER_ADMIN  →  cria/desativa MANAGER
+   MANAGER   →  cria/desativa CONSULTANT  (+ tudo que CONSULTANT faz)
+      CONSULTANT → cria tenants/owners (signup) e gerencia módulos de qualquer tenant
+```
+
+- `CONSULTANT`: cria tenants + donos (equivalente ao que hoje só `SUPER_ADMIN` faz em `POST /v1/signup`) e liga/desliga módulos de qualquer tenant que estiver atendendo.
+- `MANAGER`: tudo que `CONSULTANT` faz, mais criar e desativar contas `CONSULTANT`.
+- `SUPER_ADMIN`: tudo que `MANAGER` faz, mais criar e desativar contas `MANAGER`.
+- Contas de staff têm um campo `active` (distinto do soft-delete existente) — desativar é reversível, deletar não.
+
+Ver [`sprints/sprint-04-hierarquia-admin`](../sprints/sprint-04-hierarquia-admin) para o plano de implementação.
+
 ### Cardápio Digital
 
 - **Aggregates**: `Menu` (raiz, contém `MenuItem` como entidade interna), `Order` (raiz)

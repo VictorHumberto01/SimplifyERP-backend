@@ -1,4 +1,4 @@
-import { Account } from '@/modules/identity-access/entities/account';
+import { Account } from '@/modules/core/entities/account';
 
 declare module 'fastify' {
   export interface FastifyRequest {

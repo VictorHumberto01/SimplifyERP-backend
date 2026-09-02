@@ -9,17 +9,22 @@ O dono do estabelecimento vê quais módulos (Cardápio Digital, PDV, ...) estã
 
 ## Backend
 
-- [ ] Entidade `EnabledModule` associada ao `Tenant`
-- [ ] Endpoint `GET /establishment/modules`: lista módulos habilitados
-- [ ] Endpoint `PATCH /establishment/modules/:module`: liga/desliga um módulo (uso interno/admin no MVP)
-- [ ] Evento de domínio `ModuleEnabled`
+- [x] Entidade `EnabledModule` associada ao `Tenant` (enum Prisma `ModuleKey`: CORE, DIGITAL_MENU, POS, INVENTORY, FINANCE, FISCAL_REPORTS)
+- [x] Endpoint `GET /v1/establishment/modules`: lista os 5 módulos toggleáveis (CORE fica de fora, é implícito) com `enabled: true/false`
+- [x] Endpoint `PATCH /v1/establishment/modules/:module`: liga/desliga um módulo; rejeita tentativa de alterar `CORE`; sem checagem de role dono/operador nesta rodada (qualquer usuário do tenant pode alternar — o próprio DoD da task permite "uso interno/admin" no MVP)
+- [x] Evento de domínio `ModuleEnabled` (carrega `{ tenantId, module, enabled }`, cobre habilitar e desabilitar)
+- [x] `DIGITAL_MENU` e `POS` são habilitados automaticamente no signup (escopo do MVP); `INVENTORY`/`FINANCE`/`FISCAL_REPORTS` começam desligados
 
 ## Frontend
 
-- [ ] Tela de configurações do estabelecimento mostrando módulos habilitados
-- [ ] Navegação da aplicação reflete apenas os módulos habilitados para o tenant logado
+- [x] Tela `/dashboard/modulos` mostrando os módulos habilitados/desabilitados com toggle
+- [x] Navegação do dashboard reflete apenas os módulos habilitados para o tenant logado (lida a partir do backend no layout, Server Component)
 
 ## Definition of Done
 
-- [ ] Desabilitar um módulo remove seu acesso na navegação sem exigir novo deploy
-- [ ] Tela de configurações reflete o estado real do banco
+- [x] Desabilitar/habilitar um módulo reflete imediatamente na tela (sem novo deploy) — validado via Playwright, incluindo persistência após reload da página
+- [x] Tela de configurações reflete o estado real do banco
+
+## Corte de escopo
+
+- Multi-estabelecimento: o schema já suporta N estabelecimentos por tenant, mas o signup cria só 1.

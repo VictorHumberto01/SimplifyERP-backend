@@ -1,6 +1,6 @@
 import { logger } from "@/core/logger";
-import { Password } from "@/modules/identity-access/entities/value-objects/password";
-import { AccountRole } from "@/modules/identity-access/entities/value-objects/role";
+import { Password } from "@/modules/core/entities/value-objects/password";
+import { AccountRole } from "@/modules/core/entities/value-objects/role";
 import env from "@/infra/env";
 import { PrismaClient } from "@prisma/client";
 

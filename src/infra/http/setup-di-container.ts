@@ -1,2 +1,2 @@
 import "../container/shared";
-import "@/modules/identity-access/container";
+import "@/modules/core/container";

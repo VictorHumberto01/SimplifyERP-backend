@@ -56,7 +56,10 @@ O que essa tarefa entrega, em uma frase, do ponto de vista do usuário final.
 
 | Sprint | Objetivo | Status |
 |---|---|---|
-| [`sprint-00-fundacao`](./sprint-00-fundacao) | Infraestrutura, scaffolding e setup dos dois repositórios | Em andamento |
-| [`sprint-01-core`](./sprint-01-core) | Autenticação, tenants e configuração do estabelecimento | Não iniciada |
+| [`sprint-00-fundacao`](./sprint-00-fundacao) | Infraestrutura, scaffolding e setup dos dois repositórios | Concluída |
+| [`sprint-01-core`](./sprint-01-core) | Autenticação, tenants e configuração do estabelecimento | Concluída |
 | [`sprint-02-cardapio-digital`](./sprint-02-cardapio-digital) | Cardápio publicável e pedidos via QR Code | Não iniciada |
 | [`sprint-03-pdv`](./sprint-03-pdv) | Frente de caixa: itens, descontos, fechamento de comanda | Não iniciada |
+| [`sprint-04-hierarquia-admin`](./sprint-04-hierarquia-admin) | Cargos de staff (manager/consultant) com criação em cascata e desativação | Não iniciada |
+
+`sprint-04` é sobre o módulo Core (gestão de quem opera a consultoria) e não depende de `sprint-02`/`sprint-03` — pode ser priorizada antes delas se fizer mais sentido para o negócio.

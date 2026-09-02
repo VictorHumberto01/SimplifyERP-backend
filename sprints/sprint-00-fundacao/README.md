@@ -8,6 +8,6 @@ Não entrega funcionalidade de negócio — é a base técnica.
 
 | Tarefa | Descrição | Status |
 |---|---|---|
-| [`task-01-scaffold-projetos`](./task-01-scaffold-projetos.md) | Scaffold inicial do backend (Fastify + TS + estrutura DDD) e do frontend (Next.js + Tailwind) | Frontend feito, backend pendente |
-| [`task-02-infra-local`](./task-02-infra-local.md) | Docker Compose com PostgreSQL e Redis, variáveis de ambiente | Não iniciada |
-| [`task-03-ci-basico`](./task-03-ci-basico.md) | Pipeline de CI (lint, build, test) para os dois repositórios | Não iniciada |
+| [`task-01-scaffold-projetos`](./task-01-scaffold-projetos.md) | Scaffold inicial do backend (Fastify + TS + estrutura DDD) e do frontend (Next.js + Tailwind) | Concluída (rename `identity-access` → `core` feito) |
+| [`task-02-infra-local`](./task-02-infra-local.md) | Docker Compose com PostgreSQL e Redis, variáveis de ambiente | Concluída |
+| [`task-03-ci-basico`](./task-03-ci-basico.md) | Pipeline de CI (lint, build, test) para os dois repositórios | Workflows criados; execução real no GitHub não verificada |

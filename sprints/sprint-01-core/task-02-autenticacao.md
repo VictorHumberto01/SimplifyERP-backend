@@ -9,19 +9,24 @@ Usuários cadastrados conseguem fazer login e acessar áreas protegidas do siste
 
 ## Backend
 
-- [ ] Endpoint `POST /login`: valida credenciais e emite JWT
-- [ ] Middleware Fastify de autenticação (valida JWT em rotas protegidas)
-- [ ] Modelagem de `Role` (value object) para controle de acesso por papel (dono vs. operador)
-- [ ] Evento de domínio `UserAuthenticated`
+- [x] Endpoint `POST /v1/auth/login`: valida credenciais e emite JWT (já existia no scaffold reciclado, validado nesta rodada)
+- [x] Middleware Fastify de autenticação (`authenticate`, já existia)
+- [x] `Role` (value object) ganhou `OWNER` e `OPERATOR` além de `SUPER_ADMIN`/`USER` — sem fluxo de convite de operador ainda (ver corte de escopo)
+- [x] `UserAuthenticated`: decisão deliberada de **não** criar um evento novo — `AccountLoggedInEvent` (já existente) cobre a mesma informação e já dispara tanto no login quanto no signup
 
 ## Frontend
 
-- [ ] Página de login
-- [ ] Armazenamento seguro do token de sessão (ex. cookie httpOnly via rota de API do Next.js)
-- [ ] Guarda de rotas: redireciona para login quando não autenticado
-- [ ] Logout
+- [x] Página de login (`/login`)
+- [x] Armazenamento seguro do token de sessão via cookie httpOnly (`simplifyerp_session`), setado por `app/api/auth/login`
+- [x] Guarda de rotas: `src/proxy.ts` (Next.js 16 renomeou `middleware.ts` para `proxy.ts`) redireciona `/dashboard/*` para `/login` quando o cookie não existe
+- [x] Logout (`app/api/auth/logout` + botão no layout do dashboard)
 
 ## Definition of Done
 
-- [ ] Login com credenciais válidas dá acesso a uma rota protegida; credenciais inválidas são rejeitadas
-- [ ] Acessar uma rota protegida sem estar autenticado redireciona para o login
+- [x] Login com credenciais válidas dá acesso a uma rota protegida; credenciais inválidas são rejeitadas — validado via curl e Playwright
+- [x] Acessar uma rota protegida sem estar autenticado redireciona para o login — validado via Playwright
+
+## Corte de escopo
+
+- UI de desafio MFA no login não foi implementada — o backend já suporta (`mfaRequired`), o proxy de login repassa a informação, mas a página apenas mostra uma mensagem em vez de um fluxo de verificação.
+- `AccountRole.OPERATOR` existe no enum mas nenhum fluxo ainda cria um operador (não há convite de equipe nesta sprint).

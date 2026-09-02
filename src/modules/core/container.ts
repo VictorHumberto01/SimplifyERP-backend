@@ -1,0 +1,20 @@
+import { IAccountRepository } from "@/modules/core/repositories/account-repository";
+import { IEncrypter } from "@/modules/core/cryptography/encrypter";
+import { ISessionRepository } from "@/modules/core/repositories/session-repository";
+import { ITenantRepository } from "@/modules/core/repositories/tenant-repository";
+import { IEstablishmentRepository } from "@/modules/core/repositories/establishment-repository";
+import { IEnabledModuleRepository } from "@/modules/core/repositories/enabled-module-repository";
+import { container } from "tsyringe";
+import { PrismaAccountRepository } from "@/modules/core/persistence/prisma/repositories/prisma-account-repository";
+import { PrismaSessionRepository } from "@/modules/core/persistence/prisma/repositories/prisma-session-repository";
+import { PrismaTenantRepository } from "@/modules/core/persistence/prisma/repositories/prisma-tenant-repository";
+import { PrismaEstablishmentRepository } from "@/modules/core/persistence/prisma/repositories/prisma-establishment-repository";
+import { PrismaEnabledModuleRepository } from "@/modules/core/persistence/prisma/repositories/prisma-enabled-module-repository";
+import { JwtEncrypter } from "@/modules/core/cryptography/jwt-encrypter";
+
+container.registerSingleton<IAccountRepository>("accountRepository", PrismaAccountRepository);
+container.registerSingleton<ISessionRepository>("sessionRepository", PrismaSessionRepository);
+container.registerSingleton<ITenantRepository>("tenantRepository", PrismaTenantRepository);
+container.registerSingleton<IEstablishmentRepository>("establishmentRepository", PrismaEstablishmentRepository);
+container.registerSingleton<IEnabledModuleRepository>("enabledModuleRepository", PrismaEnabledModuleRepository);
+container.registerSingleton<IEncrypter>("encrypter", JwtEncrypter);

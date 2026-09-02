@@ -1,5 +1,5 @@
 import { UnauthorizedError } from "@/core/errors/unauthorized-error";
-import { VerifyAccessTokenService } from "@/modules/identity-access/services/auth/verify-access-token-service";
+import { VerifyAccessTokenService } from "@/modules/core/services/auth/verify-access-token-service";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { container } from "tsyringe";
 

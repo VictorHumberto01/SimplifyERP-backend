@@ -21,13 +21,71 @@ model User {
   mfaEnabled             Boolean   @default(false)
   mfaSecretCipher        String?
   mfaConfirmedAt         DateTime?
+  tenantId               String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
   deletedAt              DateTime?
 
-  sessions Session[]
+  sessions    Session[]
+  tenant      Tenant?   @relation("TenantUsers", fields: [tenantId], references: [id])
+  ownedTenant Tenant?   @relation("TenantOwner")
 
+  @@index([tenantId])
   @@map("users")
+}
+
+model Tenant {
+  id        String    @id @default(uuid())
+  name      String
+  ownerId   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  owner          User            @relation("TenantOwner", fields: [ownerId], references: [id])
+  users          User[]          @relation("TenantUsers")
+  establishments Establishment[]
+  enabledModules EnabledModule[]
+
+  @@map("tenants")
+}
+
+model Establishment {
+  id        String    @id @default(uuid())
+  tenantId  String
+  name      String
+  document  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@map("establishments")
+}
+
+enum ModuleKey {
+  CORE
+  DIGITAL_MENU
+  POS
+  INVENTORY
+  FINANCE
+  FISCAL_REPORTS
+}
+
+model EnabledModule {
+  id        String    @id @default(uuid())
+  tenantId  String
+  module    ModuleKey
+  enabled   Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, module])
+  @@map("enabled_modules")
 }
 
 model Session {
